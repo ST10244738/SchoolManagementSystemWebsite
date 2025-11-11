@@ -1,0 +1,22 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+  spring:
+    application:
+      name: school-management-system
+
+  firebase:
+    config-path: classpath:firebase-service-account.json
+    database-url: https://tirisano-mmogo-db-default-rtdb.firebaseio.com/
+    api-key: ${FIREBASE_API_KEY:AIzaSyBalHsb4PyTInrM7OJP-RD4sc40cfc4Pvs}
+
+  cors:
+    allowed-origins:
+      - http://localhost:5173
+      - http://127.0.0.1:5173
+
+  logging:
+    level:
+      com.school.management: DEBUG

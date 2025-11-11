@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/am120754/WebstormProjects/school-frontend/src/**)",
+      "Read(//c/Users/am120754/WebstormProjects/school-frontend/**)",
+      "Bash(mvn clean:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
