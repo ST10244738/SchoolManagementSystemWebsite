@@ -18,10 +18,8 @@ public class WebConfig {
         config.setAllowCredentials(true);
 
         // Allow origin from React dev server
-        config.addAllowedOrigin("http://localhost:5173");
-        config.addAllowedOriginPattern("http://localhost:*");
-
         config.addAllowedOrigin("https://tirisanommogo.netlify.app/");
+        config.addAllowedOriginPattern("http://localhost:*");
 
         // Allow all headers
         config.addAllowedHeader("*");
