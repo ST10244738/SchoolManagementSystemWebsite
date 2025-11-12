@@ -1,5 +1,6 @@
 # === Stage 1: The Build Stage ===
-FROM maven:3.9-eclipse-temurin-17 AS build
+# Use a JDK 21 image
+FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
 # Copy the Maven wrapper and pom.xml first
@@ -7,7 +8,6 @@ COPY .mvn/ .mvn
 COPY mvnw .
 COPY pom.xml .
 
-# --- ADD THIS LINE ---
 # Add execute permission to the wrapper script
 RUN chmod +x ./mvnw
 
@@ -22,7 +22,8 @@ RUN ./mvnw clean package -DskipTests
 
 
 # === Stage 2: The Final Runtime Stage ===
-FROM eclipse-temurin:17-jre-focal
+# Use a JRE 21 image
+FROM eclipse-temurin:21-jre-focal
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
