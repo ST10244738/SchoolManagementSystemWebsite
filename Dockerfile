@@ -1,23 +1,40 @@
-# Use an official OpenJDK image
-FROM openjdk:17-jdk-slim
+# === Stage 1: The Build Stage ===
+# Uses a full JDK (version 17) and Maven to build the .jar file
+FROM maven:3.9-eclipse-temurin-17 AS build
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the entire backend project into the container
-COPY . .
+# Copy the Maven wrapper and pom.xml first
+COPY .mvn/ .mvn
+COPY mvnw .
+COPY pom.xml .
 
-# Build the app (choose Gradle or Maven)
-# Comment out the one you don't use
+# Run the wrapper to download dependencies
+# This is cached, so it's faster on subsequent builds
+RUN ./mvnw dependency:go-offline
 
-# For Maven:
-RUN ./mvnw -DskipTests package || mvn -DskipTests package
+# Copy the rest of your source code
+COPY src src
 
-# For Gradle:
-# RUN ./gradlew build -x test || gradle build -x test
+# Run the build!
+# This skips tests. Remove -DskipTests if you want to run them.
+RUN ./mvnw clean package -DskipTests
 
-# Expose port (Render uses dynamic PORT)
+
+# === Stage 2: The Final Runtime Stage ===
+# Uses a slim JRE (Java Runtime) which is smaller and more secure
+FROM eclipse-temurin:17-jre-focal
+
+# Set a new, clean working directory
+WORKDIR /app
+
+# Copy the built .jar file from the 'build' stage
+# The '*.jar' wildcard is fine here
+COPY --from=build /app/target/*.jar app.jar
+
+# Expose the port your Spring Boot app runs on (default is 8080)
 EXPOSE 8080
 
-# Run the application (Maven target or Gradle build)
-CMD ["sh", "-c", "java -jar $(find target -name '.jar' || find build/libs -name '.jar')"]
+# The command to run your application
+ENTRYPOINT ["java", "-jar", "app.jar"]
