@@ -21,7 +21,7 @@ public class WebConfig {
         config.addAllowedOrigin("http://localhost:5173");
         config.addAllowedOriginPattern("http://localhost:*");
 
-        config.addAllowedOrigin("https://tirisano-mmogo.netlify.app/");
+        config.addAllowedOrigin("https://tirisanommogo.netlify.app/");
 
         // Allow all headers
         config.addAllowedHeader("*");
